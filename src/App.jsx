@@ -1,339 +1,328 @@
 import { useState } from "react";
 import { products } from "./data/products";
 import ProductCard from "./components/ProductCard";
+import ProductDetail from "./components/ProductDetail";
 import logo from "./assets/images/logo.png";
+
+const isMobile = window.innerWidth <= 768;
 
 function App() {
   const [cart, setCart] = useState([]);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-function addToCart(product) {
-  setCart([...cart, product]);
-}
+  function addToCart(product) {
+    setCart([...cart, product]);
+  }
 
-if (orderPlaced) {
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "40px",
-        textAlign: "center",
-        background: "linear-gradient(135deg, #121212 0%, #1a1a1a 100%)",
-      }}
-    >
+  if (orderPlaced) {
+    return (
       <div
         style={{
-          backgroundColor: "#1c1c1c",
-          borderRadius: "24px",
-          padding: "60px 40px",
-          border: "1px solid #2a2a2a",
-          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
-          maxWidth: "500px",
-          width: "100%",
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "40px",
+          background: "linear-gradient(135deg, #121212, #1a1a1a)",
         }}
       >
         <div
           style={{
-            fontSize: "64px",
-            marginBottom: "24px",
-            animation: "scaleIn 0.5s ease-out",
-          }}
-        >
-          ✅
-        </div>
-        <h1
-          style={{
-            fontSize: "32px",
-            fontWeight: "700",
-            margin: "0 0 16px 0",
-            color: "#f5f5f5",
-            letterSpacing: "-0.5px",
-          }}
-        >
-          Order Confirmed
-        </h1>
-        <p
-          style={{
-            color: "#aaa",
-            fontSize: "16px",
-            lineHeight: "1.6",
-            margin: "0 0 8px 0",
-          }}
-        >
-          Your order has been successfully sent to the robot.
-        </p>
-        <p
-          style={{
-            color: "#888",
-            fontSize: "14px",
-            lineHeight: "1.6",
-            margin: "0 0 32px 0",
-          }}
-        >
-          Robot will begin pick-and-place operation.
-        </p>
-
-        <button
-          onClick={() => {
-            setCart([]);
-            setOrderPlaced(false);
-          }}
-          style={{
-            backgroundColor: "#00c853",
-            color: "#000",
-            padding: "14px 32px",
-            borderRadius: "10px",
-            fontWeight: "600",
-            fontSize: "15px",
-            border: "none",
-            cursor: "pointer",
-            transition: "all 0.2s ease",
-            textTransform: "uppercase",
-            letterSpacing: "0.5px",
+            backgroundColor: "#1c1c1c",
+            borderRadius: "24px",
+            padding: "50px 40px",
+            maxWidth: "420px",
             width: "100%",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#00e676";
-            e.currentTarget.style.transform = "scale(1.02)";
-            e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 200, 83, 0.4)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "#00c853";
-            e.currentTarget.style.transform = "scale(1)";
-            e.currentTarget.style.boxShadow = "none";
+            textAlign: "center",
+            border: "1px solid #2a2a2a",
           }}
         >
-          ⬅ Back to Products
-        </button>
+          <div style={{ fontSize: "56px", marginBottom: "16px" }}>✅</div>
+          <h1 style={{ color: "#f5f5f5", marginBottom: "12px" }}>
+            Order Confirmed
+          </h1>
+          <p style={{ color: "#aaa", marginBottom: "32px" }}>
+            Robot has received the order.
+          </p>
+
+          <button
+            onClick={() => {
+              setCart([]);
+              setOrderPlaced(false);
+            }}
+            style={{
+              backgroundColor: "#00c853",
+              color: "#000",
+              padding: "14px",
+              width: "100%",
+              borderRadius: "10px",
+              fontWeight: "600",
+              border: "none",
+            }}
+          >
+            Back to Products
+          </button>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
-    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "32px 24px", minHeight: "100vh" }}>
+    <div
+      style={{
+        maxWidth: "1400px",
+        margin: "0 auto",
+        padding: "32px 24px",
+        minHeight: "100vh",
+        paddingBottom: isMobile ? "120px" : "0",
+      }}
+    >
       {/* HEADER */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "20px",
-          marginBottom: "8px",
+          gap: "16px",
+          marginBottom: "0",
         }}
       >
-        <img
-          src={logo}
-          alt="Pickr Logo"
+        {/* Logo */}
+        <div
           style={{
-            height: "120px",
-            width: "auto",
-            objectFit: "contain",
-            imageRendering: "crisp-edges",
+            width: isMobile ? "90px" : "110px",
+            height: isMobile ? "90px" : "110px",
+            borderRadius: "50%",
+            overflow: "hidden",
+            flexShrink: 0,
           }}
-        />
-        <div>
-          <h1
+        >
+          <img
+            src={logo}
+            alt="Pickr"
             style={{
-              fontSize: "36px",
-              fontWeight: "700",
-              margin: "0",
-              color: "#f5f5f5",
-              letterSpacing: "-1px",
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
             }}
-          >
-            Pickr
-          </h1>
-          <p
+          />
+        </div>
+
+        {/* Search Bar */}
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#2a2a2a",
+            borderRadius: "30px",
+            padding: "12px 16px",
+            boxShadow: "inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.05)",
+            border: "1px solid #1a1a1a",
+            position: "relative",
+          }}
+        >
+          {/* Search Text - Centered */}
+          <div
             style={{
-              color: "#888",
+              color: "#aaaaaa",
               fontSize: "14px",
-              margin: "4px 0 0 0",
-              fontWeight: "400",
+              fontWeight: "500",
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
             }}
           >
-            Robotic Warehouse Ordering Interface
-          </p>
+            SEARCH
+          </div>
+
+          {/* Magnifying Glass Icon - Right */}
+          <div
+            style={{
+              cursor: "pointer",
+              padding: "4px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "absolute",
+              right: "16px",
+            }}
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              style={{
+                filter: "drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3))",
+              }}
+            >
+              <circle
+                cx="7.5"
+                cy="7.5"
+                r="5.5"
+                stroke="#aaaaaa"
+                strokeWidth="1.5"
+                fill="none"
+              />
+              <path
+                d="M12.5 12.5L16 16"
+                stroke="#aaaaaa"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+            </svg>
+          </div>
         </div>
       </div>
 
+      {/* MAIN GRID */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "3fr 1fr",
+          gridTemplateColumns: isMobile ? "1fr" : "3fr 1fr",
           gap: "32px",
-          marginTop: "40px",
+          marginTop: "0",
         }}
       >
-        {/* LEFT: PRODUCTS */}
+        {/* PRODUCTS */}
         <div>
           <h2
             style={{
-              fontSize: "24px",
-              fontWeight: "600",
-              margin: "0 0 24px 0",
               color: "#f5f5f5",
-              letterSpacing: "-0.5px",
+              marginBottom: "24px",
+              textAlign: "center",
+              fontSize: isMobile ? "18px" : "22px",
+              fontWeight: "700",
+              letterSpacing: "0.3px",
             }}
           >
-            Products
+            Instant robo-pickup. Order now!
           </h2>
 
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-              gap: "24px",
+              gridTemplateColumns: isMobile
+                ? "repeat(2, 1fr)"
+                : "repeat(3, 1fr)",
+              gap: isMobile ? "12px" : "20px",
             }}
           >
             {products.map((p) => (
               <ProductCard
                 key={p.id}
                 product={p}
-                onAdd={addToCart}
+                onClick={(product) => setSelectedProduct(product)}
               />
             ))}
           </div>
         </div>
 
-        {/* RIGHT: CART */}
-        <div
-          style={{
-            backgroundColor: "#1c1c1c",
-            borderRadius: "16px",
-            padding: "24px",
-            height: "fit-content",
-            border: "1px solid #2a2a2a",
-            boxShadow: "0 4px 16px rgba(0, 0, 0, 0.3)",
-            position: "sticky",
-            top: "32px",
-          }}
-        >
+        {/* DESKTOP CART */}
+        {!isMobile && (
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              marginBottom: "24px",
+              backgroundColor: "#1c1c1c",
+              borderRadius: "16px",
+              padding: "24px",
+              border: "1px solid #2a2a2a",
+              height: "fit-content",
+              position: "sticky",
+              top: "32px",
             }}
           >
-            <h2
-              style={{
-                fontSize: "20px",
-                fontWeight: "600",
-                margin: "0",
-                color: "#f5f5f5",
-              }}
-            >
-              Cart
+            <h2 style={{ color: "#f5f5f5" }}>
+              Cart ({cart.length})
             </h2>
-            {cart.length > 0 && (
-              <span
-                style={{
-                  backgroundColor: "#00c853",
-                  color: "#000",
-                  borderRadius: "12px",
-                  padding: "2px 8px",
-                  fontSize: "12px",
-                  fontWeight: "700",
-                  minWidth: "24px",
-                  textAlign: "center",
-                }}
-              >
-                {cart.length}
-              </span>
-            )}
-          </div>
 
-          {cart.length === 0 ? (
-            <div
-              style={{
-                textAlign: "center",
-                padding: "40px 20px",
-                color: "#666",
-                fontSize: "14px",
-              }}
-            >
-              <div style={{ fontSize: "32px", marginBottom: "12px" }}>🛒</div>
-              <p style={{ margin: "0", color: "#888" }}>No items selected</p>
-            </div>
-          ) : (
-            <>
-              <ul
-                style={{
-                  listStyle: "none",
-                  padding: "0",
-                  margin: "0 0 24px 0",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "12px",
-                }}
-              >
-                {cart.map((item, i) => (
-                  <li
-                    key={i}
-                    style={{
-                      backgroundColor: "#252525",
-                      padding: "12px 16px",
-                      borderRadius: "10px",
-                      color: "#f5f5f5",
-                      fontSize: "14px",
-                      border: "1px solid #2a2a2a",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                    }}
-                  >
-                    <span
+            {cart.length === 0 ? (
+              <p style={{ color: "#888" }}>No items selected</p>
+            ) : (
+              <>
+                <ul style={{ padding: 0, listStyle: "none" }}>
+                  {cart.map((item, i) => (
+                    <li
+                      key={i}
                       style={{
-                        color: "#00c853",
-                        fontWeight: "600",
-                        fontSize: "12px",
+                        backgroundColor: "#252525",
+                        padding: "12px",
+                        marginBottom: "8px",
+                        borderRadius: "8px",
+                        color: "#f5f5f5",
                       }}
                     >
-                      ✓
-                    </span>
-                    {item.name}
-                  </li>
-                ))}
-              </ul>
+                      {item.name}
+                    </li>
+                  ))}
+                </ul>
 
-              <button
-                onClick={() => setOrderPlaced(true)}
-                style={{
-                  backgroundColor: "#00c853",
-                  color: "#000",
-                  padding: "14px 20px",
-                  width: "100%",
-                  borderRadius: "10px",
-                  fontWeight: "600",
-                  fontSize: "15px",
-                  border: "none",
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.5px",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "#00e676";
-                  e.currentTarget.style.transform = "scale(1.02)";
-                  e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 200, 83, 0.4)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "#00c853";
-                  e.currentTarget.style.transform = "scale(1)";
-                  e.currentTarget.style.boxShadow = "none";
-                }}
-              >
-                Place Order
-              </button>
-            </>
-          )}
-        </div>
+                <button
+                  onClick={() => setOrderPlaced(true)}
+                  style={{
+                    backgroundColor: "#00c853",
+                    color: "#000",
+                    padding: "14px",
+                    width: "100%",
+                    borderRadius: "10px",
+                    border: "none",
+                    fontWeight: "600",
+                  }}
+                >
+                  Place Order
+                </button>
+              </>
+            )}
+          </div>
+        )}
       </div>
+
+      {/* MOBILE BOTTOM CART */}
+      {isMobile && cart.length > 0 && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: "#1c1c1c",
+            borderTop: "1px solid #2a2a2a",
+            padding: "16px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+        >
+          <span style={{ color: "#f5f5f5" }}>
+            🛒 {cart.length} item{cart.length > 1 ? "s" : ""}
+          </span>
+
+          <button
+            onClick={() => setOrderPlaced(true)}
+            style={{
+              backgroundColor: "#00c853",
+              color: "#000",
+              padding: "12px 20px",
+              borderRadius: "10px",
+              border: "none",
+              fontWeight: "600",
+            }}
+          >
+            Place Order
+          </button>
+        </div>
+      )}
+
+      {/* Product Detail Modal */}
+      {selectedProduct && (
+        <ProductDetail
+          product={selectedProduct}
+          onAdd={addToCart}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
     </div>
   );
 }
